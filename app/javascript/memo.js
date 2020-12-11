@@ -1,10 +1,9 @@
-document.addEventListener('DOMContentLoaded', () =>  {
+function memo() {
   const submit = document.getElementById("submit");
   submit.addEventListener("click", (e) => {
-  const formData = new FormData(document.getElementById("form"));
     fetch("/posts", {
       method: "POST",
-      body: formData,
+      body: new FormData(document.getElementById("form")),
     }).then(response => {
       // エラーレスポンスが返されたことを検知する
       if (!response.ok) {
@@ -28,12 +27,14 @@ document.addEventListener('DOMContentLoaded', () =>  {
           formText.value = "";
         });
       }
+    // HTTP通信に失敗した時（例外処理）
     }).catch(error => {
       console.error(error);
       });
     e.preventDefault();
   });
-});
+}
+document.addEventListener("DOMContentLoaded", memo);
 
 function escapeSpecialChars(str) {
   return str
@@ -54,3 +55,40 @@ function escapeHTML(strings, ...values) {
     }
   });  
 }
+
+
+// XMLHttpRequesで上記と同じ実装 
+// function memo() {
+//  const submit = document.getElementById("submit");
+//  submit.addEventListener("click", (e) => {
+//    const formData = new FormData(document.getElementById("form"));
+//    const XHR = new XMLHttpRequest();
+//    XHR.open("POST", "/posts", true);
+//    XHR.responseType = "json";
+//    XHR.send(formData);
+//    XHR.onload = () => {
+//      if (XHR.status != 200) {
+//        alert(`Error ${XHR.status}: ${XHR.statusText}`);
+//        return null;
+//      }
+//      console.log(XHR.response);
+//      const item = XHR.response.post;
+//      console.log(item);
+//      const list = document.getElementById("list");
+//      const formText = document.getElementById("content");
+//      const HTML = `
+//        <div class="post" data-id=${item.id}>
+//          <div class="post-date">
+//            投稿日時：${item.created_at}
+//          </div>
+//          <div class="post-content">
+//          ${item.content}
+//          </div>
+//        </div>`;
+//      list.insertAdjacentHTML("afterend", HTML);
+//      formText.value = "";
+//    };
+//    e.preventDefault();
+//  });
+// }
+// window.addEventListener("load", memo);
