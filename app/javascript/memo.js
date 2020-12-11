@@ -34,7 +34,7 @@ function memo() {
     e.preventDefault();
   });
 }
-document.addEventListener("DOMContentLoaded", memo);
+window.addEventListener("load", memo);
 
 function escapeSpecialChars(str) {
   return str
